@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Converter</title>
+    <style>
+    
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f0f0;
+            height: 100%;
+        }
+        
+        .converter-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 50px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        h2 {
+            text-align: center;
+        }
+        
+        select, button{
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+       
+        
+        input{
+          width: 93%;
+          padding: 10px;
+          margin: 10px 0;
+          border-radius: 8px;
+          border: 1px solid #ccc;
+        }
+        
+        button {
+            background-color: #e48b0d;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: rgb(15, 32, 109);
+        }
+        .result {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="converter-container">
+        <h2>Currency Converter</h2>
+        <select id="fromCurrency">
+            <option value="NGN">NGN - Nigerian Naira</option>
+            <option value="EUR">EUR - Euro</option>
+            <option value="USD">USD - US Dollar</option>
+            <option value="CAD">CAD - Canadian Dollar</option>
+            <option value="JPY">JPY - Japanese Yen</option>
+            <option value="CHF">CHF - Swiss Franc</option>
+            <option value="NZD">NZD - New Zealand Dollar</option>
+        </select>
+
+        <select id="toCurrency">
+            <option value="NGN">NGN - Nigerian Naira</option>
+            <option value="EUR">EUR - Euro</option>
+            <option value="USD">USD - US Dollar</option>
+            <option value="CAD">CAD - Canadian Dollar</option>
+            <option value="JPY">JPY - Japanese Yen</option>
+            <option value="CHF">CHF - Swiss Franc</option>
+            <option value="NZD">NZD - New Zealand Dollar</option>
+        </select>
+
+        <input type="number" id="amount" placeholder="Enter amount" required>
+        <button id="convertBtn">Convert</button>
+        <div class="result" id="result">Converted amount will appear here</div>
+    </div>
+
+    <script>
+        // Insert your own API key here
+        const apiKey = 'your_api_key'; 
+        const apiURL = `https://api.exchangerate-api.com/v4/latest/`;
+
+        document.getElementById('convertBtn').addEventListener('click', function() {
+            const fromCurrency = document.getElementById('fromCurrency').value;
+            const toCurrency = document.getElementById('toCurrency').value;
+            const amount = document.getElementById('amount').value;
+
+            if (amount === '' || isNaN(amount)) {
+                alert('Please enter a valid amount');
+                return;
+            }
+
+            fetch(`${apiURL}${fromCurrency}`)
+                .then(response => response.json())
+                .then(data => {
+                    const rate = data.rates[toCurrency];
+                    const convertedAmount = (amount * rate).toFixed(2);
+                    document.getElementById('result').innerText = `${amount} ${fromCurrency} = ${convertedAmount} ${toCurrency}`;
+                })
+                .catch(error => {
+                    document.getElementById('result').innerText = 'Error fetching exchange rate';
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+
+</body>
+</html>
